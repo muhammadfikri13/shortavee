@@ -11,7 +11,8 @@ In this project, so far, we have 2 endpoints,
 - /api/shorten: POST request to shorten a URL
 - /api/urls: GET request to show all URLs and its informations.
 
-### Now we are using JWT Authentication, it's a token-based auth. So once we logged in we get token that will be used to access shorten and urls endppoints. 
+### Now we are using JWT Authentication, 
+it's a token-based auth. So once we logged in we get token that will be used to access shorten and urls endppoints. 
 
 ### React progress;
 - Now we have login page and dashboard+logout button
