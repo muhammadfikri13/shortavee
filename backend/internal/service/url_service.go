@@ -40,3 +40,7 @@ func (s *URLService) IncrementClickCount(id uuid.UUID) error {
 func (s *URLService) GetURLsByUser(userID uuid.UUID) ([]model.URL, error) {
 	return s.repo.FindAllByUserID(userID)
 }
+
+func (s *URLService) DeleteURL(id string, userID string) error {
+	return s.repo.DeleteByID(id, userID)
+}

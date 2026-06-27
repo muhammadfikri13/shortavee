@@ -71,6 +71,7 @@ func main() {
 	authorized.POST("/shorten", h.CreateShortURL)
 	authorized.GET("/urls", h.GetAllURLs)
 	authorized.GET("/me", authHandler.GetMe)
+	authorized.DELETE("/urls/:id", h.DeleteURL)
 
 	router.GET("/:code", h.RedirectURL)
 	router.POST("/api/register", authHandler.Register)

@@ -2,8 +2,6 @@ import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";    
 
-
-
 export default function Login() {
 
     const navigate = useNavigate();
@@ -29,6 +27,9 @@ export default function Login() {
 
     return (
         <div>
+            <h1 className="text-4xl font-bold">
+                Login
+            </h1>
             <form onSubmit={handleLogin}>
                 <input
                     type="email"

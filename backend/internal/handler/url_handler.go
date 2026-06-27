@@ -123,3 +123,32 @@ func (h *URLHandler) GetAllURLs(c *gin.Context) {
 
 	c.JSON(http.StatusOK, urls)
 }
+
+func (h *URLHandler) DeleteURL(c *gin.Context) {
+
+	id := c.Param("id")
+
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
+		return
+	}
+
+	err := h.service.DeleteURL(
+		id,
+		userID.(string),
+	)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "URL deleted successfully",
+	})
+}

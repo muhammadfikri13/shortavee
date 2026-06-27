@@ -65,3 +65,9 @@ func (r *URLRepository) FindAll() ([]model.URL, error) {
 
 	return urls, nil
 }
+
+func (r *URLRepository) DeleteByID(id string, userID string) error {
+	return r.DB.
+		Where("id = ? AND user_id = ?", id, userID).
+		Delete(&model.URL{}).Error
+}
