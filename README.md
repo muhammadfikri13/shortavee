@@ -44,4 +44,8 @@ Logout algorithm is simple, (for now) we just delete the token in localStorage, 
 - It works by finding the url id and match the userID. If those parameters match, then execute the deletion. Once the button clicked, it calls delete function that connected to backend api
 <img width="575" height="489" alt="image" src="https://github.com/user-attachments/assets/7ed1a3e0-0868-44c0-8897-0f90d353f5b1" />
 
+### Update 29 June 2026
+- Tidy up card order (responsive) and it's component (reposition copy and delete button)
+- Update delete function, when the URL deleted, it immediately update the URL list by adding local state. Also replace window delete confirmation using sweetalert
+- Using toast for alert succes, and error
 
