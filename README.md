@@ -49,3 +49,7 @@ Logout algorithm is simple, (for now) we just delete the token in localStorage, 
 - Update delete function, when the URL deleted, it immediately update the URL list by adding local state. Also replace window delete confirmation using sweetalert
 - Using toast for alert succes, and error
 
+### Update 2nd July 2026
+- Make better UI for login and register page.
+<img width="996" height="566" alt="image" src="https://github.com/user-attachments/assets/1163e274-c9b1-4b8c-b72b-aa1a7c406666" />
+
