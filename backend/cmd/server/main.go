@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"shortavee/backend/internal/handler"
 	"shortavee/backend/internal/middleware"
 	"shortavee/backend/internal/model"
@@ -48,15 +49,26 @@ func main() {
 	authHandler := handler.NewAuthHandler(authService)
 
 	router := gin.Default()
+
+	// 1. Ambil URL frontend dari environment variable
+	frontendURL := os.Getenv("FRONTEND_URL")
+
+	// 2. Jika kosong (saat di komputer lokal), gunakan localhost sebagai cadangan
+	if frontendURL == "" {
+		frontendURL = "http://localhost:5173"
+	}
+
 	router.Use(cors.New(cors.Config{
+		// 3. Masukkan variabel frontendURL ke dalam array AllowOrigins
 		AllowOrigins: []string{
-			"http://localhost:5173",
+			frontendURL,
 		},
 		AllowMethods: []string{
 			"GET",
 			"POST",
 			"PUT",
 			"DELETE",
+			"OPTIONS", // Tambahkan OPTIONS untuk menangani preflight request dari browser
 		},
 		AllowHeaders: []string{
 			"Origin",
