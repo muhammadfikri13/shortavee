@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Backend (Golang)",
+            "type": "shell",
+            "command": "go run cmd/server/main.go", // Sesuaikan jika file utama kamu bukan main.go di root folder backend
+            "options": {
+                "cwd": "${workspaceFolder}/backend" // Ganti dengan nama folder backend-mu
+            },
+            "presentation": {
+                "group": "group-backend",
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Run Frontend (React)",
+            "type": "shell",
+            "command": "npm run dev", // Ganti 'npm run dev' jika menggunakan Vite/Next.js
+            "options": {
+                "cwd": "${workspaceFolder}/frontend" // Ganti dengan nama folder frontend-mu
+            },
+            "presentation": {
+                "group": "group-frontend",
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Run All App",
+            "dependsOn": [
+                "Run Backend (Golang)",
+                "Run Frontend (React)"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

@@ -1,24 +1,34 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import toast from "react-hot-toast";
+import Swal from 'sweetalert2';
+
 
 export default function Dashboard() {
     const [urls, setUrls] = useState([]);
     const navigate = useNavigate();
     const [newURL, setNewURL] = useState("");
-    
+    const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
+
     // 1. Buat state baru untuk memicu proses pengambilan data ulang
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     useEffect(() => {
         // 2. Kembalikan fetchUrls ke dalam useEffect agar linter bahagia
         const fetchUrls = async () => {
+
+            setFetching(true);
+
             try {
                 const res = await API.get("/api/urls");
                 console.log(res.data);
                 setUrls(res.data);
             } catch (err) {
                 console.error(err);
+            } finally {
+                setFetching(false);
             }
         };
 
@@ -31,34 +41,53 @@ export default function Dashboard() {
     const createURL = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
         try {
             await API.post("/api/shorten", {
                 url: newURL,
             });
 
             setNewURL("");
+            toast.success("URL created!")
             
             // 4. Ubah nilai trigger (tambah 1) untuk memberi tahu useEffect agar mengambil data terbaru
             setRefreshTrigger((prev) => prev + 1);
-        } catch (err) {
+        }   catch (err) {
             console.error(err);
-            alert("Failed to create URL");
+            toast.error("Failed to create URL");
+        }   finally {
+            setLoading(false);
         }
     };
 
     const deleteURL = async (id) => {
+        // Memanggil SweetAlert2, ini akan mengembalikan Promise
+        const result = await Swal.fire({
+            title: "Delete this URL?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626", // Warna merah Tailwind
+            cancelButtonColor: "#9ca3af", // Warna abu-abu Tailwind
+            confirmButtonText: "Yes, Delete"
+        });
 
-        const confirmed = window.confirm(
-            "Delete this URL?"
-        );
-
-        if (!confirmed) return;
+        // Jika user klik "Cancel" atau menutup popup, hentikan fungsi
+        if (!result.isConfirmed) return;
 
         try {
             await API.delete(`/api/urls/${id}`);
-
-        }   catch (err) {
+            setUrls((prevUrls) => prevUrls.filter((url) => url.id !== id));
+            Swal.fire({
+                title: "Deleted!",
+                text: "Your URL has been deleted successfully.",
+                icon: "success",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        } catch (err) {
             console.error(err);
+            toast.error("Failed to delete URL");
         }
     }
 
@@ -69,7 +98,7 @@ export default function Dashboard() {
         
             navigator.clipboard.writeText(shortURL);
 
-            alert("Copied!");
+            toast.success("Copied!");
     };
 
     const handleLogout = () => {
@@ -96,7 +125,7 @@ export default function Dashboard() {
             <div className="max-w-5xl mx-auto p-6">
                 <form 
                 onSubmit={createURL}
-                className="bg-white p-4 rounded-lg shadow-mb-6">
+                className="flex bg-white p-4 rounded-lg shadow-mb-6">
                     <input
                         type="text"
                         placeholder="https://example.com"
@@ -106,16 +135,16 @@ export default function Dashboard() {
                     />
 
                     <button 
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        type="submit"
+                        disabled={loading}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
                     >
-                        Shorten
+                        {loading ? "Creating..." : "Shorten"}
                     </button>
                 </form>
-
             </div>
             
-            <div className="grid gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-6">
                 {urls.map((url) => (
                     <div
                     key={url.id}
@@ -144,24 +173,25 @@ export default function Dashboard() {
                         Clicks: {url.click_count}
                         </span>
 
-                        <button
-                        onClick={() =>
-                            copyToClipboard(url.short_code)
-                        }
-                        className="bg-green-600 text-white px-3 py-1 rounded"
-                        >
-                        Copy
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() =>
+                                    copyToClipboard(url.short_code)
+                                }
+                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded"
+                                >
+                                Copy
+                            </button>
 
-                        <button
-                            onClick={() =>
+                            <button
+                                onClick={() =>
                                 deleteURL(url.id)
-                            }
-                            className="bg-red-600 text-white px-3 py-1 rounded"
-                            >
+                                }
+                                className="bg-white border-2 border-red-200 hover:bg-red-600 text-black hover:text-white px-3 py-1 rounded"
+                                >
                                 Delete
-                        </button>
-
+                            </button>
+                        </div>
                     </div>
 
                     </div>
