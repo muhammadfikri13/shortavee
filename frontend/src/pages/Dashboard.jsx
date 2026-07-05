@@ -11,6 +11,7 @@ export default function Dashboard() {
     const [newURL, setNewURL] = useState("");
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const VITE_API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
     // 1. Buat state baru untuk memicu proses pengambilan data ulang
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -94,10 +95,9 @@ export default function Dashboard() {
     const copyToClipboard = (shortCode) => {
 
         const shortURL =
-            `http://localhost:8080/${shortCode}`;
+            `${VITE_API_BASE_URL}/${shortCode}`;
         
             navigator.clipboard.writeText(shortURL);
-
             toast.success("Copied!");
     };
 
@@ -156,7 +156,7 @@ export default function Dashboard() {
                     </h3>
 
                     <p className="text-blue-600 mb-3">
-                        http://localhost:8080/{url.short_code}
+                        {VITE_API_BASE_URL}/{url.short_code}
                     </p>
 
                     <h3 className="font-semibold text-gray-800">

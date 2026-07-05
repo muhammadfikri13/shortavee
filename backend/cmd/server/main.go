@@ -59,16 +59,13 @@ func main() {
 	}
 
 	router.Use(cors.New(cors.Config{
-		// 3. Masukkan variabel frontendURL ke dalam array AllowOrigins
-		AllowOrigins: []string{
-			frontendURL,
-		},
+		AllowOrigins: []string{"*"},
 		AllowMethods: []string{
 			"GET",
 			"POST",
 			"PUT",
 			"DELETE",
-			"OPTIONS", // Tambahkan OPTIONS untuk menangani preflight request dari browser
+			"OPTIONS",
 		},
 		AllowHeaders: []string{
 			"Origin",
