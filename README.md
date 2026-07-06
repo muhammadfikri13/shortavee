@@ -53,3 +53,13 @@ Logout algorithm is simple, (for now) we just delete the token in localStorage, 
 - Make better UI for login and register page.
 <img width="996" height="566" alt="image" src="https://github.com/user-attachments/assets/1163e274-c9b1-4b8c-b72b-aa1a7c406666" />
 
+### Update 6th of July 2026
+- Sucessfully deployed
+- Frontend in Vercel
+- Backend in Render
+- Database in Neon
+- The shortened url still showing localhost in Live.
+
+### Update 7th of July
+- Build filters on Render and Vercel
+- Still get an error when refreshing the page manually
