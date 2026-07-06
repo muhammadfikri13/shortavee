@@ -58,8 +58,12 @@ Logout algorithm is simple, (for now) we just delete the token in localStorage, 
 - Frontend in Vercel
 - Backend in Render
 - Database in Neon
-- The shortened url still showing localhost in Live.
+- Build filters on Render and Vercel
 
 ### Update 7th of July
-- Build filters on Render and Vercel
-- Still get an error when refreshing the page manually
+- Successfully dockerized backend and frontend into images.
+- But now still running both services separately
+- docker run -p 5173:5173 shortavee-frontend
+- docker run --env-file .env -p 8080:8080 shortavee-backend
+- docker compose up -d --build
+- docker compose up -d (running two services automatically)
