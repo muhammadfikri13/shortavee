@@ -90,5 +90,4 @@ func main() {
 	router.POST("/api/login", authHandler.Login)
 	router.Run(":8080")
 
-	fmt.Println("FRONTEND_URL:", frontendURL)
 }
