@@ -59,3 +59,7 @@ Logout algorithm is simple, (for now) we just delete the token in localStorage, 
 - Backend in Render
 - Database in Neon
 - The shortened url still showing localhost in Live.
+
+### Update 7th of July
+- Build filters on Render and Vercel
+- Still get an error when refreshing the page manually
