@@ -11,7 +11,7 @@ export default function Dashboard() {
     const [newURL, setNewURL] = useState("");
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
-    const VITE_API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
     // 1. Buat state baru untuk memicu proses pengambilan data ulang
     const [refreshTrigger, setRefreshTrigger] = useState(0);
