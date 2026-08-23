@@ -1,28 +1,49 @@
 services:
+  # 1. Tambahkan service Redis di sini
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
   backend:
     build:
       context: ./backend
-
     container_name: shortavee-backend
-
     ports:
       - "8080:8080"
-
     env_file:
       - ./backend/.env
-
     restart: unless-stopped
+    # 2. Pastikan backend menunggu sampai Redis menyala dulu
+    depends_on:
+      - redis
 
   frontend:
     build:
       context: ./frontend
-
     container_name: shortavee-frontend
-
     ports:
       - "5173:5173"
-
     restart: unless-stopped
-
     depends_on:
       - backend
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus

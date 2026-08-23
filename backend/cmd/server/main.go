@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"shortavee/backend/internal/handler"
+	"shortavee/backend/internal/metrics"
 	"shortavee/backend/internal/middleware"
 	"shortavee/backend/internal/model"
 	"shortavee/backend/internal/repository"
@@ -13,11 +14,15 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"shortavee/backend/pkg/redis"
 )
 
 func main() {
 
 	db, err := database.Connect()
+	redis.Connect()
 	if err != nil {
 		panic(err)
 	}
@@ -85,9 +90,13 @@ func main() {
 	authorized.GET("/me", authHandler.GetMe)
 	authorized.DELETE("/urls/:id", h.DeleteURL)
 
+	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
 	router.GET("/:code", h.RedirectURL)
 	router.POST("/api/register", authHandler.Register)
 	router.POST("/api/login", authHandler.Login)
+
+	metrics.Register()
 	router.Run(":8080")
 
 }

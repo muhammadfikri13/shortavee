@@ -1,10 +1,14 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"net/url"
+	"time"
 
+	"shortavee/backend/internal/metrics"
 	"shortavee/backend/internal/service"
+	"shortavee/backend/pkg/redis"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -69,6 +73,8 @@ func (h *URLHandler) CreateShortURL(c *gin.Context) {
 		return
 	}
 
+	metrics.URLsCreated.Inc()
+
 	c.JSON(http.StatusCreated, gin.H{
 		"short_url": "http://localhost:8080/" + shortURL.ShortCode,
 	})
@@ -77,6 +83,15 @@ func (h *URLHandler) CreateShortURL(c *gin.Context) {
 func (h *URLHandler) RedirectURL(c *gin.Context) {
 
 	code := c.Param("code")
+
+	ctx := context.Background()
+
+	cachedURL, err := redis.Client.Get(ctx, code).Result()
+
+	if err == nil {
+		c.Redirect(http.StatusMovedPermanently, cachedURL)
+		return
+	}
 
 	url, err := h.service.GetOriginalURL(code)
 
@@ -87,7 +102,21 @@ func (h *URLHandler) RedirectURL(c *gin.Context) {
 		return
 	}
 
+	err = redis.Client.Set(
+		ctx,
+		code,
+		url.OriginalURL,
+		24*time.Hour,
+	).Err()
+
+	if err != nil {
+		// tidak perlu gagal request
+		// cukup log saja
+		println("Redis set failed:", err.Error())
+	}
+
 	h.service.IncrementClickCount(url.ID)
+	metrics.Redirects.Inc()
 
 	c.Redirect(http.StatusMovedPermanently, url.OriginalURL)
 }

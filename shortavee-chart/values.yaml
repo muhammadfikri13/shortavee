@@ -1,0 +1,19 @@
+backend:
+  replicaCount: 2
+
+  image:
+    repository: fikri13/shortavee-backend
+    tag: latest
+
+  service:
+    port: 8080
+
+redis:
+  replicaCount: 1
+
+  image:
+    repository: redis
+    tag: 7-alpine
+
+  service:
+    port: 6379
