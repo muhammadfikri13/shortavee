@@ -1,5 +1,5 @@
 backend:
-  replicaCount: 2
+  replicaCount: 3
 
   image:
     repository: fikri13/shortavee-backend
