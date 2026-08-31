@@ -399,7 +399,7 @@ replicaCount: 3
 ArgoCD automatically synchronized the cluster and scaled backend pods from 2 replicas to 3 replicas without manual intervention.\
 
 ### ArgoCD Documentations:
-Before making changes in Helm values, the backend pos is 2.
+Before making changes in Helm values, the backend pod is 2.
 ![alt text](<assets/images/argocd before changes.png>)
 
 Then we commited changes of the Replica set into 3
@@ -434,7 +434,7 @@ Planned enhancements:
 
 Muhammad Fikri
 
-- LinkedIn: https://linkedin.com
+- LinkedIn: https://www.linkedin.com/in/aafikrii/
 - GitHub: https://github.com/muhammadfikri13
 
 <br>
