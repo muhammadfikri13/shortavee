@@ -149,7 +149,11 @@ Shortavee is a URL shortening platform that allows users to create and manage sh
 
 # Architecture
 
-![alt text](assets/images/image-11.png)
+![alt text](assets/images/arc2.png)
+
+![alt text](assets/images/arc1.png)
+
+![alt text](assets/images/arc3.png)
 
 - The developer pushes the source code and Helm Chart to GitHub.
 - GitHub Actions automatically builds the Docker image and pushes it to Docker Hub.
@@ -210,6 +214,8 @@ Local development can be started with:
 ```bash
 docker compose up -d
 ```
+<br>
+<br>
 
 # ⚙️ CI/CD Pipeline
 
@@ -302,7 +308,7 @@ Implemented dashboards:
 
 ### Monitoring Stack:
 
-![alt text](assets/images/image-6.png)
+
 
 ### Prometheus and Grafana Screenshots
 ![alt text](assets/images/prome.png)
