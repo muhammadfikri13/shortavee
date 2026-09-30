@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -8,15 +9,33 @@ import (
 )
 
 func Connect() (*gorm.DB, error) {
-	// 1. Ambil DATABASE_URL dari environment variable (untuk di Render)
-	dsn := os.Getenv("DB_HOST")
+	var dsn string
 
-	// 2. Jika DATABASE_URL kosong (berarti Anda sedang jalankan di komputer lokal)
-	//    Maka gunakan DSN localhost lama Anda sebagai cadangan (fallback)
+	// Prioritas 1: DATABASE_URL (Neon / Render)
+	dsn = os.Getenv("DATABASE_URL")
+
+	// Prioritas 2: PostgreSQL Kubernetes
 	if dsn == "" {
-		dsn = "host=localhost user=shortavee password=tinyavee123 dbname=shortavee_db port=5432 sslmode=disable"
+		host := os.Getenv("DB_HOST")
+		port := os.Getenv("DB_PORT")
+		user := os.Getenv("DB_USER")
+		password := os.Getenv("DB_PASSWORD")
+		dbname := os.Getenv("DB_NAME")
+
+		dsn = fmt.Sprintf(
+			"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+			host,
+			user,
+			password,
+			dbname,
+			port,
+		)
 	}
 
-	// 3. GORM otomatis mengenali apakah dsn berupa format URL postgres:// atau format host=localhost
+	// Fallback terakhir untuk local development
+	if dsn == "" || dsn == "host= user= password= dbname= port= sslmode=disable" {
+		dsn = "host=localhost user=shortavee password=Tinyavee123!@# dbname=shortavee_db port=5432 sslmode=disable"
+	}
+
 	return gorm.Open(postgres.Open(dsn), &gorm.Config{})
 }
