@@ -36,10 +36,14 @@ func main() {
 	defer sqlDB.Close()
 	// -------------------------
 
-	db.AutoMigrate(
+	if err := db.AutoMigrate(
 		&model.User{},
 		&model.URL{},
-	)
+	); err != nil {
+		panic("AutoMigrate failed: " + err.Error())
+	}
+
+	fmt.Println("AutoMigrate success")
 
 	fmt.Println(utils.GenerateShortCode(6))
 
