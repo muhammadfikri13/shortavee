@@ -11,7 +11,8 @@ export default function Dashboard() {
     const [newURL, setNewURL] = useState("");
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
-    const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+    const SHORT_URL_BASE = window.location.origin;
+    // const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
     // 1. Buat state baru untuk memicu proses pengambilan data ulang
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -23,7 +24,7 @@ export default function Dashboard() {
             setFetching(true);
 
             try {
-                const res = await API.get("/api/urls");
+                const res = await API.get("/urls");
                 console.log(res.data);
                 setUrls(res.data);
             } catch (err) {
@@ -44,7 +45,7 @@ export default function Dashboard() {
 
         setLoading(true);
         try {
-            await API.post("/api/shorten", {
+            await API.post("/shorten", {
                 url: newURL,
             });
 
@@ -77,7 +78,7 @@ export default function Dashboard() {
         if (!result.isConfirmed) return;
 
         try {
-            await API.delete(`/api/urls/${id}`);
+            await API.delete(`/urls/${id}`);
             setUrls((prevUrls) => prevUrls.filter((url) => url.id !== id));
             Swal.fire({
                 title: "Deleted!",
@@ -95,8 +96,9 @@ export default function Dashboard() {
     const copyToClipboard = (shortCode) => {
 
         const shortURL =
-            `${VITE_API_BASE_URL}/${shortCode}`;
-        
+            // `${VITE_API_BASE_URL}/${shortCode}`;
+            `${SHORT_URL_BASE}/${shortCode}`;
+
             navigator.clipboard.writeText(shortURL);
             toast.success("Copied!");
     };
@@ -156,7 +158,7 @@ export default function Dashboard() {
                     </h3>
 
                     <p className="text-blue-600 mb-3">
-                        {VITE_API_BASE_URL}/{url.short_code}
+                        {SHORT_URL_BASE}/{url.short_code}
                     </p>
 
                     <h3 className="font-semibold text-gray-800">

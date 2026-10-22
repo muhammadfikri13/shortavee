@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+	"os"
 
 	"shortavee/backend/internal/metrics"
 	"shortavee/backend/internal/service"
@@ -75,10 +76,16 @@ func (h *URLHandler) CreateShortURL(c *gin.Context) {
 
 	metrics.URLsCreated.Inc()
 
+	baseURL := os.Getenv("APP_BASE_URL")
+	if baseURL == "" {
+		baseURL = "http://shortavee.local"
+	}
+
+	baseURL = strings.TrimRight(baseURL, "/")
+
 	c.JSON(http.StatusCreated, gin.H{
-		"short_url": "http://localhost:8080/" + shortURL.ShortCode,
+		"short_url": baseURL + "/" + shortURL.ShortCode,
 	})
-}
 
 func (h *URLHandler) RedirectURL(c *gin.Context) {
 

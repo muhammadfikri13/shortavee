@@ -12,7 +12,7 @@ export default function Register() {
 
         try {
             // Menyesuaikan dengan endpoint register kamu, misalnya /api/register
-            await API.post("/api/register", {
+            await API.post("/register", {
                 email,
                 password,
             });

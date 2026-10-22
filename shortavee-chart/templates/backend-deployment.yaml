@@ -72,3 +72,6 @@ spec:
                 configMapKeyRef:
                   name: backend-config
                   key: REDIS_ADDR
+
+            - name: APP_BASE_URL
+              value: "http://shortavee.local"
