@@ -1,30 +1,41 @@
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: shortavee-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
 
 spec:
   ingressClassName: nginx
 
   rules:
-  - host: shortavee.local
+    - host: shortavee.local
+      http:
+        paths:
+          # API: login, create URL, get URLs, delete URL
+          - path: /api(/|$).*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8080
 
-    http:
-      paths:
-      - path: /api
-        pathType: Prefix
+          # Short URL: /K6v06Z
+          - path: /[A-Za-z0-9]{6}$
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8080
 
-        backend:
-          service:
-            name: backend
-            port:
-              number: 8080
-
-      - path: /
-        pathType: Prefix
-
-        backend:
-          service:
-            name: frontend
-            port:
-              number: 80
+          # Frontend: /, /login, /dashboard, assets
+          - path: /.*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
