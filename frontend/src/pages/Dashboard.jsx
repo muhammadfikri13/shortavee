@@ -93,15 +93,18 @@ export default function Dashboard() {
         }
     }
 
-    const copyToClipboard = (shortCode) => {
+    const copyToClipboard = async (shortCode) => {
+        const shortURL = `${SHORT_URL_BASE}/${shortCode}`;
 
-        const shortURL =
-            // `${VITE_API_BASE_URL}/${shortCode}`;
-            `${SHORT_URL_BASE}/${shortCode}`;
-
-            navigator.clipboard.writeText(shortURL);
+        try {
+            await navigator.clipboard.writeText(shortURL);
             toast.success("Copied!");
+        } catch (err) {
+            console.error("Clipboard error:", err);
+            toast.error("Failed to copy URL");
+        }
     };
+
 
     const handleLogout = () => {
         localStorage.removeItem("token");
