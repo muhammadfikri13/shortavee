@@ -1,4 +1,6 @@
 .env
+.env.development.local
+.env.production
 
 # Logs
 logs

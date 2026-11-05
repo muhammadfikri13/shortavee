@@ -11,8 +11,8 @@ export default function Dashboard() {
     const [newURL, setNewURL] = useState("");
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
-    const SHORT_URL_BASE = window.location.origin;
-    // const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+    const SHORT_URL_BASE =
+        import.meta.env.VITE_SHORT_URL_BASE || window.location.origin;    // const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
     // 1. Buat state baru untuk memicu proses pengambilan data ulang
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -97,13 +97,28 @@ export default function Dashboard() {
         const shortURL = `${SHORT_URL_BASE}/${shortCode}`;
 
         try {
-            await navigator.clipboard.writeText(shortURL);
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(shortURL);
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = shortURL;
+                document.body.appendChild(textArea);
+                textArea.select();
+
+                const copied = document.execCommand("copy");
+                textArea.remove();
+
+                if (!copied) throw new Error("Copy failed");
+            }
+
             toast.success("Copied!");
         } catch (err) {
-            console.error("Clipboard error:", err);
+            console.error(err);
             toast.error("Failed to copy URL");
         }
     };
+
+
 
 
     const handleLogout = () => {
@@ -160,7 +175,7 @@ export default function Dashboard() {
                         Short URL
                     </h3>
 
-                    <p className="text-blue-600 mb-3">
+                    <p className="text-blue-600 mb-3 break-all">
                         {SHORT_URL_BASE}/{url.short_code}
                     </p>
 
